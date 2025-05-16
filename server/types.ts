@@ -28,3 +28,12 @@ export interface Comment  {
     comment: string;
     commentedAt: string;
 }
+
+
+export type expressHandler<Request, Response> = RequestHandler<
+any,
+Partial<Response>,
+Partial<Request>,
+any
+>;
+ 
