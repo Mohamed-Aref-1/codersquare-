@@ -1,5 +1,6 @@
 import express, { ErrorRequestHandler, RequestHandler } from "express";
 import { listPostsHandeler, createPostHandeler } from "./handlers/postHandelers.js";
+import asyncHandler from "express-async-handler";
 const app = express();
 
 // parse json bodies in the request to make express understand it
@@ -22,12 +23,12 @@ app.use(requestloggermiddleware);
 
 // this is a route handler for the GET request to the /posts path
 // it will send the posts array as a response to the client
-app.get("/v1/posts", listPostsHandeler);
+app.get("/v1/posts", asyncHandler(listPostsHandeler));
 
 // this is a route handler for the POST request to the /posts path
 // it will add a new post to the posts array
 // and send a 200 status code to the client
-app.post("/v1/posts", createPostHandeler);
+app.post("/v1/posts", asyncHandler(createPostHandeler));
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error(err.stack);
