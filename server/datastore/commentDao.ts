@@ -1,7 +1,7 @@
-import { comment } from "../types.js";
+import { Comment } from "../types.js";
 
 export interface CommentDao{
-    createComment(comment: comment): void;
+    createComment(comment: Comment): void;
     deleteComment(id: string): void;
-    listComments(postId: string): comment[];
+    listComments(postId: string): Comment[];
 }

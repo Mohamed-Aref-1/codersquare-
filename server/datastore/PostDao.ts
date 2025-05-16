@@ -1,9 +1,9 @@
-import { post } from "../types.js";
+import { Post } from "../types.js";
 
 export interface PostDao{
-    createPost(post: post): void;
-    listPosts(): post[];
-    getPostById(id: string): post | undefined;
+    createPost(post: Post): void;
+    listPosts(): Post[];
+    getPostById(id: string): Post | undefined;
     deletePost(id: string): void;
     
 }

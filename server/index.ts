@@ -1,5 +1,5 @@
 import express, { RequestHandler } from "express";
-import { db } from "./datastore/index.js";
+import { listPostsHandeler, createPostHandeler , deletePostHandeler} from "./handlers/postHandelers.js";
 const app = express();
 
 // parse json bodies in the request to make express understand it
@@ -23,22 +23,18 @@ app.use(requestloggermiddleware);
 
 // this is a route handler for the GET request to the /posts path
 // it will send the posts array as a response to the client
-app.get("/posts", (req, res) => {
-
-    res.send({posts: db.listPosts()});
-});
+app.get("/posts", listPostsHandeler );
 
 // this is a route handler for the POST request to the /posts path
 // it will add a new post to the posts array
 // and send a 200 status code to the client
-app.post("/posts" , (req, res) => {
-    const post = req.body;
-    db.createPost(post);
-    res.sendStatus(200);
-});
+app.post("/posts" , createPostHandeler);
 
 // this will start the server on port 2000
 // and log a message to the console when the server is running
+
+// app.delete("/posts/:id", deletePostHandeler);
+
 app.listen(2000, () => {
     console.log("Server is running on port 2000");
 });

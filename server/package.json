@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec \"node --loader ts-node/esm\" index.ts"
+    "start": "nodemon --exec tsx index.ts"
   },
   "author": "",
   "license": "ISC",

@@ -1,4 +1,4 @@
-export interface user{
+export interface User{
     id: string;
     fname: string;
     lname: string;
@@ -7,7 +7,7 @@ export interface user{
     password: string;
 }
 
-export interface post{
+export interface Post{
     id: string;
     title: string;
     url: string;
@@ -15,13 +15,13 @@ export interface post{
     postedAt: string;
 }
 
-export interface like{
+export interface Like{
     postId: string;
     userId: string;
     likedAt: string;
 }
 
-export interface comment  {
+export interface Comment  {
     id: string;
     postId: string;
     userId: string;

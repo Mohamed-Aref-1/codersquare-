@@ -1,6 +1,6 @@
-import { like } from "../types.js";
+import { Like } from "../types.js";
 
 export interface LikeDao{
-    createLike(like: like): void;
+    createLike(like: Like): void;
     deleteLike(postId: string, userId: string): void;
 }
