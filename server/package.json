@@ -11,7 +11,9 @@
   "dependencies": {
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",

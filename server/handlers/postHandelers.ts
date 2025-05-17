@@ -1,4 +1,4 @@
-import { db } from "../datastore/index.js";
+import { initializeDb } from "../datastore/index.js";
 import { Request, Response, RequestHandler } from "express";
 import { expressHandler, Post } from "../types.js";
 import crypto from "crypto";
@@ -9,6 +9,8 @@ import {
   listPostsResponse,
 } from "../api.js";
 
+const db = await initializeDb();
+
 export const listPostsHandeler: expressHandler<listPostsRequest, listPostsResponse> = async (
   req: Request,
   res: Response
@@ -16,6 +18,8 @@ export const listPostsHandeler: expressHandler<listPostsRequest, listPostsRespon
   const posts = await db.listPosts();
   res.send({ posts: posts }); 
 };
+
+
 
 export const createPostHandeler: expressHandler<createPostRequest, createPostResponse> = async (
   req: Request,
@@ -44,9 +48,17 @@ export const createPostHandeler: expressHandler<createPostRequest, createPostRes
     postedAt: new Date().toISOString(),
   };
 
-  await db.createPost(newPost);
-  console.log("post created");
-  res.status(200).send("Thanks for creating a post.");
+  try {
+    await db.createPost(newPost);
+    console.log("post created");
+    res.status(200).send("Thanks for creating a post.");
+  } catch (error: any) {
+    if (error.message?.includes('UNIQUE constraint failed')) {
+      res.status(400).send("A post with this URL already exists");
+    } else {
+      throw error; // Let the error handler handle other errors
+    }
+  }
 };
 
 // import { db } from "../datastore/index.js";

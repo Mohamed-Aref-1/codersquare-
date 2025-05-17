@@ -1,4 +1,4 @@
-import { Post } from "./types.js";
+import { Post , User} from "./types.js";
 
 export type listPostsRequest = {};
 export type listPostsResponse = {
@@ -12,7 +12,18 @@ export type getPostResponse = {
     post: Post;
 }
 
-export type deletePostRequest = {};
-export type deletePostResponse = {};
 
+
+
+
+export type signupRequest = Pick<User, "email" | "fname" | "lname" |"username"| "password">;
+export interface signupResponse {}
+
+
+
+export interface signInRequest {
+    login: string; // user name or email
+    password: string;
+}
+export type signInResponse = Pick<User, "email" | "fname" | "lname" | "id" | "username">;
 
