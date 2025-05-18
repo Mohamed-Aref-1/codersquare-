@@ -12,11 +12,16 @@ export const authMiddleware : expressHandler<any, any> = async (req: Request, re
         res.status(401).send("Unauthorized");
         return;
     }
-
     try {   
         const payload = verifyJwt(token);
+
+        // TO DO
+        console.log("check payload");
+        
+        console.log("payload", payload);
         const db = await initializeDb();
         const user = await db.getUserById(payload.UserId);
+        console.log("user", user?.id);
         if (!user) {
             res.status(401).send("Not a valid user");
             return;

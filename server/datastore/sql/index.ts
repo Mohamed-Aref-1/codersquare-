@@ -5,7 +5,7 @@ import { open as sqliteOpen, Database } from "sqlite"; // this is the open funct
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { User, Post, Like, Comment } from "../../types.js";
+import { User, Post, Like, Comment, Tier } from "../../types.js";
 import { datastore } from "../index.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -72,13 +72,14 @@ export class sqlDatastore implements datastore {
         if (!this.db) {
             throw new Error("Database not initialized");
         }
-        await this.db.run('INSERT INTO Users (id, email, fname, lname, password, username) VALUES (:id, :email, :fname, :lname, :password, :username)', {
+        await this.db.run('INSERT INTO Users (id, email, fname, lname, password, username, tier_id) VALUES (:id, :email, :fname, :lname, :password, :username, :tier_id)', {
             ':id': user.id,
             ':email': user.email,
             ':fname': user.fname,
             ':lname': user.lname,
             ':password': user.password,
-            ':username': user.username
+            ':username': user.username,
+            ':tier_id': user.tier_id || 1 // Default to free tier if not specified
         });
     }
     async getUserByEmail(email: string): Promise<User | undefined> {
@@ -131,5 +132,19 @@ export class sqlDatastore implements datastore {
     }
     async listComments(postId: string): Promise<Comment[]> {
         throw new Error("Method not implemented.");
+    }
+
+    async getTierById(id: number): Promise<Tier | undefined> {
+        if (!this.db) {
+            throw new Error("Database not initialized");
+        }
+        return await this.db.get<Tier>('SELECT * FROM Tiers WHERE tier_id = ?', [id]);
+    }
+
+    async getAllTiers(): Promise<Tier[]> {
+        if (!this.db) {
+            throw new Error("Database not initialized");
+        }
+        return await this.db.all<Tier[]>('SELECT * FROM Tiers');
     }
 }

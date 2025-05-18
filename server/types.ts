@@ -7,6 +7,7 @@ export interface User{
     username: string;
     email: string;
     password: string;
+    tier_id: number;
 }
 
 export interface Post{
@@ -31,6 +32,12 @@ export interface Comment  {
     commentedAt: string;
 }
 
+export interface Tier {
+    tier_id: number;
+    tier_name: string;
+    request_limit: number;
+    time_window: number;
+}
 
 export type expressHandler<Request, Response> = RequestHandler<
 any,

@@ -11,8 +11,21 @@ import {
 import { signJwt } from "../auth.js";
 
 const db = await initializeDb();
+export const PASSWORD_KEY = process.env.PASSWORD_SALT as string; 
+if (!PASSWORD_KEY) {
+    console.error("PASSWORD_SALT environment variable is required");
+    process.exit(1);
+}
 
+function hashPassword(password: string): string {
+    const hash = crypto.pbkdf2Sync(password, PASSWORD_KEY, 1000, 64, 'sha512').toString('hex');
+    return hash;
+}
 
+function verifyPassword(password: string, hashedPassword: string): boolean {
+    const verifyHash = crypto.pbkdf2Sync(password, PASSWORD_KEY, 1000, 64, 'sha512').toString('hex');
+    return hashedPassword === verifyHash;
+}
 
 export const signUpHandler: expressHandler<signupRequest, signupResponse> = async (req: Request, res: Response) => {
     const {email, fname, lname, username, password} = req.body;
@@ -28,6 +41,7 @@ export const signUpHandler: expressHandler<signupRequest, signupResponse> = asyn
         return;
     }
 
+    const hashedPassword = hashPassword(password);
     // Create new user
     const user: User = {
         id: crypto.randomUUID(),
@@ -35,7 +49,8 @@ export const signUpHandler: expressHandler<signupRequest, signupResponse> = asyn
         fname,
         lname,
         username,
-        password
+        password: hashedPassword,
+        tier_id: 1
     };
 
     await db.createUser(user);
@@ -59,21 +74,19 @@ export const loginHandler: expressHandler<signInRequest, signInResponse> = async
     }
 
     // Check password
-    if (user.password !== password) {
+    if (!verifyPassword(password, user.password)) {
         res.status(401).send("Invalid credentials Password");
         return;
     }
 
-    const jwt    = signJwt({ UserId: user.id });
+    const jwt = signJwt({ UserId: user.id });
     // Return user data without password
     res.status(200).send({
         id: user.id,
         email: user.email,
         fname: user.fname,
         lname: user.lname,
-        username: user.username ,
-
-        
+        username: user.username,
         jwt: jwt
     });
 }

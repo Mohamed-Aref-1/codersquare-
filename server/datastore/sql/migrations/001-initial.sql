@@ -9,7 +9,8 @@ CREATE TABLE Users (
     lname TEXT NOT NULL,
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    tier_id INTEGER DEFAULT 1 REFERENCES Tiers(tier_id)
 );
 
 CREATE TABLE Posts (
@@ -40,9 +41,22 @@ CREATE TABLE Comments (
     FOREIGN KEY (userId) REFERENCES Users(id)
 );
 
+CREATE TABLE Tiers (
+    tier_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tier_name TEXT UNIQUE NOT NULL,
+    request_limit INTEGER NOT NULL,
+    time_window INTEGER NOT NULL -- in seconds
+);
+
+-- Seed default tiers
+INSERT INTO Tiers (tier_name, request_limit, time_window) VALUES ('free', 5, 3600);
+INSERT INTO Tiers (tier_name, request_limit, time_window) VALUES ('premium', 10, 3600);
+
 -- Down
 -- DROP TABLE Comments;
 -- DROP TABLE Likes;
 -- DROP TABLE Posts;
 -- DROP TABLE Users;
+-- DROP TABLE IF EXISTS Tiers;
+-- Note: SQLite does not support DROP COLUMN, so this is not reversible for Users.tier_id
 
