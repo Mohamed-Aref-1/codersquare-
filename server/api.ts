@@ -17,7 +17,9 @@ export type getPostResponse = {
 
 
 export type signupRequest = Pick<User, "email" | "fname" | "lname" |"username"| "password">;
-export interface signupResponse {}
+export interface signupResponse {
+    jwt: string;
+}
 
 
 
@@ -25,5 +27,8 @@ export interface signInRequest {
     login: string; // user name or email
     password: string;
 }
-export type signInResponse = Pick<User, "email" | "fname" | "lname" | "id" | "username">;
+export type signInResponse = 
+{   user: Pick<User, "email" | "fname" | "lname" | "id" | "username">;
+    jwt: string;
+}
 

@@ -13,6 +13,12 @@ const __dirname = path.dirname(__filename);
 
 // here we will make the database initialization
 export class sqlDatastore implements datastore {
+    async getUserById(id: string): Promise<User | undefined> {
+        if (!this.db) {
+            throw new Error("Database not initialized");
+        }
+        return await this.db.get<User>('SELECT * FROM Users WHERE id = ?', [id]);
+    }
 
     private db: Database<sqlite3.Database, sqlite3.Statement> | undefined;
 

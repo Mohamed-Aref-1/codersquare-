@@ -8,6 +8,7 @@ import {
     signInRequest,
     signInResponse,
 } from "../api.js";
+import { signJwt } from "../auth.js";
 
 const db = await initializeDb();
 
@@ -38,7 +39,8 @@ export const signUpHandler: expressHandler<signupRequest, signupResponse> = asyn
     };
 
     await db.createUser(user);
-    res.status(200).send("User created successfully");
+    const token = signJwt({ UserId: user.id });
+    res.status(200).send({ token });
 }
 
 export const loginHandler: expressHandler<signInRequest, signInResponse> = async (req: Request, res: Response) => {
@@ -62,12 +64,16 @@ export const loginHandler: expressHandler<signInRequest, signInResponse> = async
         return;
     }
 
+    const jwt    = signJwt({ UserId: user.id });
     // Return user data without password
     res.status(200).send({
         id: user.id,
         email: user.email,
         fname: user.fname,
         lname: user.lname,
-        username: user.username 
+        username: user.username ,
+
+        
+        jwt: jwt
     });
 }

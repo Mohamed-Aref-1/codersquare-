@@ -39,3 +39,10 @@ Partial<Request>,
 any
 >;
  
+
+
+export interface JwtObject {
+    UserId: string;
+
+}
+
