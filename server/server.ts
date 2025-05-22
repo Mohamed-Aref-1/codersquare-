@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express, { ErrorRequestHandler, RequestHandler } from "express";
+import express from "express";
 import { listPostsHandeler, createPostHandeler } from "./handlers/postHandelers.js";
 import { signUpHandler, loginHandler } from "./handlers/AuthHandeler.js";
 import asyncHandler from "express-async-handler";
@@ -9,7 +9,8 @@ import { errorMiddleware } from "./MiddleWare/errorMIddleware.js";
 import dotenv from "dotenv";  
 import { authMiddleware } from "./MiddleWare/authMiddleware.js";
 import { rateLimitMiddleware } from "./MiddleWare/rateLimitMiddleware.js";
-
+import { createCommentHandler, listCommentsHandler } from './handlers/commentHandler.js';
+import { healthzHandler } from './handlers/healthHandler.js';
 const app = express();
 
 (async () => {
@@ -22,6 +23,9 @@ const app = express();
     // public endpoints
     app.post("/v1/signup", asyncHandler(signUpHandler));
     app.post("/v1/signin", asyncHandler(loginHandler));
+    app.post("/v1/healthz", asyncHandler(healthzHandler));
+
+
 
     // protected endpoints
     app.use(authMiddleware);
@@ -30,8 +34,12 @@ const app = express();
     app.get("/v1/posts", asyncHandler(listPostsHandeler));
     app.post("/v1/posts", asyncHandler(createPostHandeler));
 
+    // comments endpoints
+    app.post("/v1/comments", asyncHandler(createCommentHandler));
+    app.get("/v1/comments", asyncHandler(listCommentsHandler));
+
     app.use(errorMiddleware);
-    app.listen(2000, () => {
-        console.log("Server is running on port 2000");
+    app.listen(process.env.PORT || 2000, () => {
+        console.log(`Server is running on port ${process.env.PORT || 2000}`);
     });
 })();

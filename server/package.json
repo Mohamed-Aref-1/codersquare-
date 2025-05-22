@@ -3,20 +3,24 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec tsx server.ts"
+    "start": "nodemon --exec tsx server.ts",
+    "start:prod": "pm2 delete server || true && pm2 start --name server --time --log-date-format \"YYYY-MM-DD HH:mm:ss\" --max-memory-restart 1G \"npx --exec tsx server.ts\""
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/ioredis": "^4.28.10",
     "@types/jsonwebtoken": "^9.0.9",
     "bcrypt": "^6.0.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
     "express-rate-limit": "^7.5.0",
+    "ioredis": "^5.6.1",
     "jsonwebtoken": "^9.0.2",
+    "pm2": "^6.0.6",
     "prettier": "^3.5.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"

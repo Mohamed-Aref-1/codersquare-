@@ -125,14 +125,30 @@ export class sqlDatastore implements datastore {
         throw new Error("Method not implemented.");
     }
     async createComment(comment: Comment): Promise<void> {
-        throw new Error("Method not implemented.");
+        if (!this.db) {
+            throw new Error("Database not initialized");
+        }
+        await this.db.run('INSERT INTO Comments (id, postId, userId, comment, commentedAt) VALUES (:id, :postId, :userId, :comment, :commentedAt)', {
+            ':id': comment.id,
+            ':postId': comment.postId,
+            ':userId': comment.userId,
+            ':comment': comment.comment,
+            ':commentedAt': comment.commentedAt
+        });
     }
+
+
+
     async deleteComment(id: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    async listComments(postId: string): Promise<Comment[]> {
-        throw new Error("Method not implemented.");
+    async listComments(): Promise<Comment[]> {
+        if (!this.db) {
+            throw new Error("Database not initialized");
+        }
+        return await this.db.all<Comment[]>('SELECT * FROM Comments');
     }
+
 
     async getTierById(id: number): Promise<Tier | undefined> {
         if (!this.db) {

@@ -1,5 +1,5 @@
 import { initializeDb } from "../datastore/index.js";
-import { Request, Response, RequestHandler } from "express";
+import { Request, Response} from "express";
 import { expressHandler, User } from "../types.js";
 import crypto from "crypto";
 import {
